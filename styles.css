@@ -22,3 +22,9 @@ main{max-width:1560px;margin:40px auto;padding:64px clamp(40px,7vw,120px) 40px;w
 .definition p{font-size:14px}
 @media(max-width:900px){main{width:calc(100% - 48px);margin:24px auto;padding:40px 32px}}
 @media(max-width:600px){body{font-size:14px}main{width:calc(100% - 28px);margin:14px auto;padding:32px 22px}.code-study p{font-size:13px}}
+
+/* Connector ends meet the inside edge of each callout. */
+.image-callouts .hotspot{width:24%;transform:translateY(-50%)}
+.image-callouts .hotspot:hover,.image-callouts .hotspot[aria-expanded=true]{transform:translateY(-50%)}
+.iceberg-callouts .hotspot:nth-child(1),.iceberg-callouts .hotspot:nth-child(3),.onion-callouts .hotspot:nth-child(1),.onion-callouts .hotspot:nth-child(3){left:2%}
+.iceberg-callouts .hotspot:nth-child(2),.onion-callouts .hotspot:nth-child(2){left:74%}
