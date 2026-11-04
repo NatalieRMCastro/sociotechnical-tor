@@ -109,3 +109,7 @@ main{max-width:1560px;margin:40px auto;padding:64px clamp(40px,7vw,120px) 40px;w
 #references li {
   margin-bottom: 20px;
 }
+
+.hero h1 {
+  font-size: clamp(32px, 4vw, 64px);
+}
