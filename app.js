@@ -59,3 +59,107 @@ document.querySelectorAll('code.language-python').forEach(code => {
  }
  fragment.append(source.slice(previous)); code.replaceChildren(fragment);
 });
+
+// Read references from the bibliography.
+const referenceEntries = [
+  ...document.querySelectorAll("#references > li")
+];
+
+const referenceLookup = new Map(
+  referenceEntries.map((entry, index) => [
+    entry.id,
+    { entry, number: index + 1 }
+  ])
+);
+
+// Create one shared reference preview.
+const sourcePreview = document.createElement("div");
+sourcePreview.className = "source-preview";
+sourcePreview.id = "source-preview";
+sourcePreview.setAttribute("role", "tooltip");
+sourcePreview.hidden = true;
+document.body.append(sourcePreview);
+
+let previewTimer;
+
+function hideSourcePreview() {
+  sourcePreview.hidden = true;
+}
+
+function schedulePreviewClose() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(hideSourcePreview, 150);
+}
+
+function showSourcePreview(citation, reference) {
+  clearTimeout(previewTimer);
+
+  // Copy the formatted reference, including its source link.
+  const content = reference.entry.cloneNode(true);
+  content.removeAttribute("id");
+
+  sourcePreview.replaceChildren(
+    document.createTextNode(`[${reference.number}] `),
+    ...content.childNodes
+  );
+
+  sourcePreview.hidden = false;
+
+  const anchor = citation.getBoundingClientRect();
+  const preview = sourcePreview.getBoundingClientRect();
+
+  const left = Math.max(
+    12,
+    Math.min(
+      anchor.left + anchor.width / 2 - preview.width / 2,
+      window.innerWidth - preview.width - 12
+    )
+  );
+
+  const below = anchor.bottom + 10;
+  const top = below + preview.height <= window.innerHeight - 12
+    ? below
+    : Math.max(12, anchor.top - preview.height - 10);
+
+  sourcePreview.style.left = `${left}px`;
+  sourcePreview.style.top = `${top}px`;
+}
+
+document.querySelectorAll(".source-citation").forEach(citation => {
+  const reference = referenceLookup.get(
+    citation.getAttribute("href").slice(1)
+  );
+
+  if (!reference) return;
+
+  citation.textContent = `[${reference.number}]`;
+  citation.setAttribute("aria-describedby", "source-preview");
+
+  citation.addEventListener("mouseenter", () => {
+    showSourcePreview(citation, reference);
+  });
+
+  citation.addEventListener("focus", () => {
+    showSourcePreview(citation, reference);
+  });
+
+  citation.addEventListener("mouseleave", schedulePreviewClose);
+  citation.addEventListener("blur", schedulePreviewClose);
+  citation.addEventListener("click", hideSourcePreview);
+});
+
+sourcePreview.addEventListener("mouseenter", () => {
+  clearTimeout(previewTimer);
+});
+sourcePreview.addEventListener("mouseleave", schedulePreviewClose);
+sourcePreview.addEventListener("focusin", () => {
+  clearTimeout(previewTimer);
+});
+sourcePreview.addEventListener("focusout", schedulePreviewClose);
+
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") hideSourcePreview();
+});
+
+window.addEventListener("scroll", hideSourcePreview, { passive: true });
+window.addEventListener("resize", hideSourcePreview);
