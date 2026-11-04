@@ -66,3 +66,46 @@ main{max-width:1560px;margin:40px auto;padding:64px clamp(40px,7vw,120px) 40px;w
 .citation:focus .citation-preview {
   display: block;
 }
+
+.source-citation {
+  color: var(--powder);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.source-citation:hover,
+.source-citation:focus {
+  background: #a1c0e333;
+}
+
+.source-preview {
+  position: fixed;
+  z-index: 100;
+  width: min(520px, calc(100vw - 24px));
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
+
+  padding: 18px 20px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f8f8f8;
+  color: #111;
+  box-shadow: 0 5px 20px #0005;
+
+  font: 16px/1.5 Arial, sans-serif;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.source-preview[hidden] {
+  display: none;
+}
+
+.source-preview a {
+  color: #0645ad;
+  text-decoration: underline;
+}
+
+#references li {
+  margin-bottom: 20px;
+}
